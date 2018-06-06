@@ -22,6 +22,8 @@
   "scripts": {
     "start": "react-scripts start",
     "server": "./node_modules/.bin/nodemon server.js",
+    "eject": "react-scripts eject",
+    "build": "react-scripts build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "standard": {
