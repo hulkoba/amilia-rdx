@@ -70,3 +70,9 @@ body {
     float:left;
     width: 111px;
 }
+
+@media (max-width: 1500px) {
+  body {
+    margin: 22px;
+  }
+}

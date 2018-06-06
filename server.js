@@ -5,7 +5,7 @@ const express = require('express')
 const app = express()
 
 app.get('/', function (req, res) {
-  res.json({
+  res.send({
     contacts: [{
       name: 'Amilia Pond',
       id: 11,
@@ -19,13 +19,6 @@ app.get('/', function (req, res) {
     }]}
   )
   // res.sendFile(path.join(__dirname, 'build', 'index.html'))
-})
-
-// get all contacts
-app.get('/gif', async (req, res) => {
-  res.json({
-    gif: await fetchGif()
-  })
 })
 
 // create contact and send back all contacts after creation
@@ -65,10 +58,3 @@ const server = app.listen(port, 'localhost', () => {
   const { address, port } = server.address()
   console.log(`Listening at http://${address}:${port}`)
 })
-
-// Fetch random GIF url with Giphy API, download and Base64 encode it
-const fetchGif = async () => {
-  console.log('fetch gif')
-  // const url = await download('giphy.com/embed/oyBqefMw5zVTi')
-  return 'giphy.com/embed/oyBqefMw5zVTi'
-}

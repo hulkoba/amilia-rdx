@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 
 import '../main.css'
 
@@ -10,6 +10,7 @@ class ContactForm extends Component {
     }
 
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleCancel = this.props.handleCancel
   }
 
   handleChange (type, event) {
@@ -17,25 +18,24 @@ class ContactForm extends Component {
     let contact = this.state.contact
 
     if (type === 'name') {
-      contact = {...contact, name: val}
+      contact = { ...contact, name: val }
     }
     if (type === 'email') {
-      contact = {...contact, email: val}
+      contact = { ...contact, email: val }
     }
     if (type === 'phone') {
-      contact = {...contact, phone: val}
+      contact = { ...contact, phone: val }
     }
-    this.setState(() => ({contact: contact}))
+    this.setState(() => ({ contact: contact }))
   }
 
   handleSubmit (event) {
-    console.log('A contact was submitted: ' + this.state.contact)
     event.preventDefault()
     this.props.addOrEditContact(this.state.contact)
   }
 
   render () {
-    const {contact} = this.state
+    const { contact } = this.state
 
     return (
       <form className='contact-form' onSubmit={this.handleSubmit}>
@@ -45,7 +45,8 @@ class ContactForm extends Component {
             type='text'
             name='contact-name'
             value={contact.name}
-            onChange={this.handleChange.bind(this, 'name')} />
+            onChange={this.handleChange.bind(this, 'name')}
+            required />
         </p>
 
         <p>
@@ -66,7 +67,10 @@ class ContactForm extends Component {
             onChange={this.handleChange.bind(this, 'phone')} />
         </p>
 
-        <button type='submit'>Save</button>
+        <div className='footer action-btns'>
+          <button type='button' onClick={this.handleCancel}>Cancel</button>
+          <button type='submit'>Save</button>
+        </div>
       </form>
     )
   }

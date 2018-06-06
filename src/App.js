@@ -7,9 +7,8 @@ import './main.css'
 
 const API = 'http://127.0.0.1:1312'
 
-
 class App extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       editView: false,
@@ -20,13 +19,13 @@ class App extends Component {
 
   componentDidMount () {
     this.fetchContacts()
-    .then(res => this.setState({ contacts: res.contacts }))
-    .catch(err => console.log(err))
+      .then(res => this.setState({ contacts: res.contacts }))
+      .catch(err => console.log(err))
   }
 
-  fetchContacts = async () => {
+  async fetchContacts () {
     try {
-      const response = await fetch(`${API}/`)
+      const response = await fetch (`${API}/`)
       const body = await response.json()
 
       return body
@@ -34,12 +33,12 @@ class App extends Component {
   }
 
   // add or edit contact
-  addContact(contact) {
+  addContact (contact) {
     console.log('### add or edit contact', contact)
     let newContacts
     // add a new contact
-    if(!contact.id) {
-      contact.id = Date.now()
+    if (!contact.id) {
+      contact.id = new Date().toISOString()
       newContacts = this.state.contacts.concat(contact)
     // find and replace contact
     } else {
@@ -62,7 +61,7 @@ class App extends Component {
     this.setState(() => {
       return {
         editView: true,
-        contact: contact.id ? contact : {name:'', email: '', phone: ''}
+        contact: contact.id ? contact : {name: '', email: '', phone: ''}
       }
     })
   }
@@ -88,21 +87,21 @@ class App extends Component {
             </Offline>
           </h1>
           {!this.state.editView &&
-          <button
-            className='add-btn'
-            onClick={this.goToEdit.bind(this)}>Add a cat
-          </button>}
+            <button
+              className='add-btn'
+              onClick={this.goToEdit.bind(this)}>Add a cat
+            </button>}
         </header>
-        {this.state.editView ?
-        <ContactForm
-          addOrEditContact={this.addContact.bind(this)}
-          contact={this.state.contact} />
-        :
-        <ContactList
-          contacts={this.state.contacts}
-          handleOnEditClick={this.goToEdit.bind(this)}
-          handleOnDeleteClick={this.deleteContact.bind(this)}
-        />
+        {this.state.editView
+          ? <ContactForm
+            addOrEditContact={this.addContact.bind(this)}
+            handleCancel={() => { this.setState(() => ({ editView: false })) }}
+            contact={this.state.contact} />
+          : <ContactList
+            contacts={this.state.contacts}
+            handleOnEditClick={this.goToEdit.bind(this)}
+            handleOnDeleteClick={this.deleteContact.bind(this)}
+          />
         }
       </div>
     )
