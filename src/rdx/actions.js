@@ -18,7 +18,6 @@ export function toggleEdit (contact) {
 }
 
 export function addContact (contact) {
-  console.log('### add contact', contact)
   return { type: ADD_CONTACT, contact }
 }
 

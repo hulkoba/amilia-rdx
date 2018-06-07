@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux'
 
 import {
+  // FETCH_CONTACTS,
   ADD_CONTACT,
   EDIT_CONTACT,
-  // REMOVE_CONTACT,
-  // FETCH_CONTACTS,
+  REMOVE_CONTACT,
   TOGGLE_EDIT
 } from './actions'
 
@@ -51,30 +51,26 @@ function editView (state = initialState.editView, action) {
   }
 }
 
+// TODO? see https://hackernoon.com/redux-patterns-add-edit-remove-objects-in-an-array-6ee70cab2456
 function contacts (state = initialState.contacts, action) {
   switch (action.type) {
     case ADD_CONTACT:
-      return Object.assign({}, state, {
-        contacts: [
-          ...state.contacts,
-          action.contact
-        ]
-      })
+      let newContact = action.contact
+      newContact.id = new Date().toISOString()
+
+      return [...state, newContact]
+
     case EDIT_CONTACT:
-      return Object.assign({}, state, {
-        contacts: [
-          ...state.contacts,
-          {
-            name: action.name,
-            phone: action.phone,
-            mail: action.mail
-          }
-        ]
+      // find and replace contact
+      return state.map(c => {
+        if (c.id === action.contact.id) return action.contact
+        return c
       })
-    // case REMOVE_CONTACT:
-    //   return Object.assign({}, state, {
-    //     contacts: action.filter
-    //   })
+
+    case REMOVE_CONTACT:
+      // return all the items not matching the action.id
+      return state.filter(c => c.id !== action.contact.id)
+
     // case FETCH_CONTACTS:
     //   return Object.assign({}, state, {
     //     contacts: action.filter

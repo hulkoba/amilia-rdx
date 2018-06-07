@@ -5,7 +5,7 @@ import { Offline, Online } from 'react-detect-offline'
 import { toggleEdit } from '../rdx/actions'
 import '../main.css'
 
-const Header = ({ dispatch }) => {
+const Header = ({ dispatch, isOpen }) => {
   return (
     <header className='app-header'>
       <h1 className='app-title'>
@@ -16,14 +16,18 @@ const Header = ({ dispatch }) => {
           <div>Hello cat, <span className='red'>you're offline</span></div>
         </Offline>
       </h1>
-      {/* {!editView && */}
-      <button
-        className='add-btn'
-        onClick={() => dispatch(toggleEdit())}>Add a cat
-      </button>
-      {/* } */}
+      {!isOpen &&
+        <button
+          className='add-btn'
+          onClick={() => dispatch(toggleEdit())}>Add a cat
+        </button>
+      }
     </header>
   )
 }
 
-export default connect()(Header)
+const mapStateToProps = state => ({
+  isOpen: state.editView.isOpen
+})
+
+export default connect(mapStateToProps)(Header)
