@@ -4,24 +4,54 @@ import {
   ADD_CONTACT,
   EDIT_CONTACT,
   // REMOVE_CONTACT,
-  // READ_CONTACTS,
+  // FETCH_CONTACTS,
   TOGGLE_EDIT
 } from './actions'
 
 // The reducer is a pure function that takes the previous state and an action, and returns the next state.
+const initialState = {
+  editView: {
+    isOpen: false,
+    contact: {
+      name: '',
+      email: '',
+      phone: ''
+    }
+  },
+  contacts: [{
+    name: 'Amilia Pond',
+    id: 11,
+    email: 'amilia@pond.com',
+    phone: '34567899876'
+  }, {
+    name: 'Doctor Who',
+    id: 22,
+    email: 'doctor@who.com',
+    phone: '34567899876'
+  }]
+}
 
-function toggleEditView (state = TOGGLE_EDIT, action) {
+function editView (state = initialState.editView, action) {
   switch (action.type) {
     case TOGGLE_EDIT:
+      let contact = {
+        name: '',
+        email: '',
+        phone: ''
+      }
+      if (typeof action.contact !== 'undefined') {
+        contact = action.contact
+      }
       return Object.assign({}, state, {
-        editView: !state.editView
+        isOpen: !state.isOpen,
+        contact
       })
     default:
       return state
   }
 }
 
-function contacts (state = [], action) {
+function contacts (state = initialState.contacts, action) {
   switch (action.type) {
     case ADD_CONTACT:
       return Object.assign({}, state, {
@@ -45,7 +75,7 @@ function contacts (state = [], action) {
     //   return Object.assign({}, state, {
     //     contacts: action.filter
     //   })
-    // case READ_CONTACTS:
+    // case FETCH_CONTACTS:
     //   return Object.assign({}, state, {
     //     contacts: action.filter
     //   })
@@ -55,7 +85,7 @@ function contacts (state = [], action) {
 }
 
 const contactApp = combineReducers({
-  toggleEditView,
+  editView,
   contacts
 })
 
