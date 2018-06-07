@@ -79,6 +79,29 @@ function contacts (state = initialState.contacts, action) {
       return state
   }
 }
+// optimistically update the state, revert on rollback
+// const ordersReducer = (state, action) {
+// switch (action.type) {
+//   case 'COMPLETE_ORDER':
+//     return {
+//       ...state,
+//       submitting: { ...state.submitting, [action.payload.orderId]: true }
+//     };
+//   case 'COMPLETE_ORDER_COMMIT':
+//     return {
+//       ...state,
+//       receipts: { ...state.receipts, [action.meta.orderId]: action.payload },
+//       submitting: omit(state.submitting, [action.meta.orderId])
+//     };
+//   case 'COMPLETE_ORDER_ROLLBACK':
+//     return {
+//       ...state,
+//       error: action.payload,
+//       submitting: omit(state.submitting, [action.meta.orderId])
+//     };
+//   default:
+//     return state;
+// }
 
 const contactApp = combineReducers({
   editView,
