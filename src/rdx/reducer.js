@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux'
 
 import {
-  // FETCH_CONTACTS,
+  FETCH_CONTACTS,
+  FETCH_CONTACTS_COMMIT,
   ADD_CONTACT,
   EDIT_CONTACT,
   REMOVE_CONTACT,
@@ -9,29 +10,16 @@ import {
 } from './actions'
 
 // The reducer is a pure function that takes the previous state and an action, and returns the next state.
-const initialState = {
-  editView: {
-    isOpen: false,
-    contact: {
-      name: '',
-      email: '',
-      phone: ''
-    }
-  },
-  contacts: [{
-    name: 'Amilia Pond',
-    id: 11,
-    email: 'amilia@pond.com',
-    phone: '34567899876'
-  }, {
-    name: 'Doctor Who',
-    id: 22,
-    email: 'doctor@who.com',
-    phone: '34567899876'
-  }]
+const initialEditView = {
+  isOpen: false,
+  contact: {
+    name: '',
+    email: '',
+    phone: ''
+  }
 }
 
-function editView (state = initialState.editView, action) {
+function editView (state = initialEditView, action) {
   switch (action.type) {
     case TOGGLE_EDIT:
       let contact = {
@@ -42,17 +30,22 @@ function editView (state = initialState.editView, action) {
       if (typeof action.contact !== 'undefined') {
         contact = action.contact
       }
-      return Object.assign({}, state, {
+      // return Object.assign({}, state, {
+      //   isOpen: !state.isOpen,
+      //   contact
+      // })
+      return {
+        ...state,
         isOpen: !state.isOpen,
         contact
-      })
+      }
     default:
       return state
   }
 }
 
 // TODO? see https://hackernoon.com/redux-patterns-add-edit-remove-objects-in-an-array-6ee70cab2456
-function contacts (state = initialState.contacts, action) {
+function contacts (state = [], action) {
   switch (action.type) {
     case ADD_CONTACT:
       let newContact = action.contact
@@ -71,10 +64,21 @@ function contacts (state = initialState.contacts, action) {
       // return all the items not matching the action.id
       return state.filter(c => c.id !== action.contact.id)
 
-    // case FETCH_CONTACTS:
-    //   return Object.assign({}, state, {
-    //     contacts: action.filter
-    //   })
+    case FETCH_CONTACTS:
+      // console.log('### FETCH_CONTACTS state', state)
+      // console.log('### FETCH_CONTACTS action', action)
+      return state
+      // return {...state}
+    case FETCH_CONTACTS_COMMIT:
+      // console.log('### FETCH_CONTACTS-COMMIT action', action)
+      // console.log([ ...state, ...action.payload ])
+      // const newContacts = {contacts: action.payload}
+      // return [
+      //   ...state,
+      //   newContacts
+      // ]
+      return action.payload
+
     default:
       return state
   }
