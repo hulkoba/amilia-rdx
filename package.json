@@ -7,9 +7,9 @@
     "@redux-offline/redux-offline": "^2.3.3",
     "express": "^4.16.3",
     "path": "^0.12.7",
-    "react": "^16.3.2",
-    "react-detect-offline": "^2.0.1",
-    "react-dom": "^16.3.2",
+    "react": "^16.4.0",
+    "react-detect-offline": "^2.1.1",
+    "react-dom": "^16.4.0",
     "react-redux": "^5.0.7",
     "redux": "^4.0.0",
     "redux-logger": "^3.0.6"

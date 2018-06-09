@@ -43,7 +43,10 @@ function editView (state = initialEditView, action) {
       return {
         ...state,
         isOpen: !state.isOpen,
-        contact
+        contact,
+        toJSON: function () {
+          return { ...this, contact: '[Contact]' }
+        }
       }
     default:
       return state
