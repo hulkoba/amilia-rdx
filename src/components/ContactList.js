@@ -8,8 +8,8 @@ class ContactList extends Component {
     this.props.readContacts()
   }
 
-  shouldComponentUpdate (nextProps) {
-    if (nextProps.state.contacts === this.props.state.contacts) {
+  shouldComponentUpdate (nextProps, nextState) {
+    if ((nextProps.state.contacts === this.props.state.contacts) && (nextProps.state.editView.isOpen === this.props.state.editView.isOpen)) {
       return false
     }
     return true
@@ -17,7 +17,7 @@ class ContactList extends Component {
 
   render () {
     const { state, toggleEdit, handleOnDeleteClick, addContact, editContact } = this.props
-    console.log('### state', state)
+    // console.log('### state', state)
     return (
       state.editView.isOpen
         ? <ContactForm

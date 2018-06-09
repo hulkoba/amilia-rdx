@@ -3,13 +3,21 @@ import { combineReducers } from 'redux'
 import {
   FETCH_CONTACTS,
   FETCH_CONTACTS_COMMIT,
+  FETCH_CONTACTS_ROLLBACK,
   ADD_CONTACT,
+  ADD_CONTACT_COMMIT,
+  ADD_CONTACT_ROLLBACK,
   EDIT_CONTACT,
+  EDIT_CONTACT_COMMIT,
+  EDIT_CONTACT_ROLLBACK,
   REMOVE_CONTACT,
+  REMOVE_CONTACT_COMMIT,
+  REMOVE_CONTACT_ROLLBACK,
   TOGGLE_EDIT
 } from './actions'
 
 // The reducer is a pure function that takes the previous state and an action, and returns the next state.
+
 const initialEditView = {
   isOpen: false,
   contact: {
@@ -19,6 +27,7 @@ const initialEditView = {
   }
 }
 
+// toggles the edit / listview and loads contact
 function editView (state = initialEditView, action) {
   switch (action.type) {
     case TOGGLE_EDIT:
@@ -30,10 +39,7 @@ function editView (state = initialEditView, action) {
       if (typeof action.contact !== 'undefined') {
         contact = action.contact
       }
-      // return Object.assign({}, state, {
-      //   isOpen: !state.isOpen,
-      //   contact
-      // })
+
       return {
         ...state,
         isOpen: !state.isOpen,
@@ -47,69 +53,79 @@ function editView (state = initialEditView, action) {
 // TODO? see https://hackernoon.com/redux-patterns-add-edit-remove-objects-in-an-array-6ee70cab2456
 function contacts (state = [], action) {
   switch (action.type) {
-    case ADD_CONTACT:
-      let newContact = action.contact
-      newContact.id = new Date().toISOString()
+    case FETCH_CONTACTS:
+      console.log('started to fetch contacts')
 
-      return [...state, newContact]
+      return state
+
+    case FETCH_CONTACTS_COMMIT:
+      return Object.assign([], state, action.payload)
+
+    case ADD_CONTACT:
+      console.log('started to add contact ', action.contact.name)
+
+      return state
+
+    case ADD_CONTACT_COMMIT:
+      return [...state, action.payload]
 
     case EDIT_CONTACT:
+      console.log('started to edit contact', action.contact.name)
+
+      return state
+
+    case EDIT_CONTACT_COMMIT:
       // find and replace contact
       return state.map(c => {
-        if (c.id === action.contact.id) return action.contact
+        if (c.id === action.payload.id) return action.payload
         return c
       })
+      // return [...state, action.payload]
+      // return Object.assign([], state, action.payload)
 
     case REMOVE_CONTACT:
-      // return all the items not matching the action.id
-      return state.filter(c => c.id !== action.contact.id)
+      console.log('started to remove contact', action.contact.name)
 
-    case FETCH_CONTACTS:
-      // console.log('### FETCH_CONTACTS state', state)
-      // console.log('### FETCH_CONTACTS action', action)
       return state
-      // return {...state}
-    case FETCH_CONTACTS_COMMIT:
-      // console.log('### FETCH_CONTACTS-COMMIT action', action)
-      // console.log([ ...state, ...action.payload ])
-      // const newContacts = {contacts: action.payload}
-      // return [
-      //   ...state,
-      //   newContacts
-      // ]
-      return action.payload
+      // return all the items not matching the action.id
+      // return state.filter(c => c.id !== action.contact.id)
+    case REMOVE_CONTACT_COMMIT:
+      // server returns list of contacts without the deleted one
+      return Object.assign([], state, action.payload)
 
     default:
       return state
   }
 }
-// optimistically update the state, revert on rollback
-// const ordersReducer = (state, action) {
-// switch (action.type) {
-//   case 'COMPLETE_ORDER':
-//     return {
-//       ...state,
-//       submitting: { ...state.submitting, [action.payload.orderId]: true }
-//     };
-//   case 'COMPLETE_ORDER_COMMIT':
-//     return {
-//       ...state,
-//       receipts: { ...state.receipts, [action.meta.orderId]: action.payload },
-//       submitting: omit(state.submitting, [action.meta.orderId])
-//     };
-//   case 'COMPLETE_ORDER_ROLLBACK':
-//     return {
-//       ...state,
-//       error: action.payload,
-//       submitting: omit(state.submitting, [action.meta.orderId])
-//     };
-//   default:
-//     return state;
-// }
+
+// TODO need to handle failures ?
+function rollbacks (state = [], action) {
+  switch (action.type) {
+    case FETCH_CONTACTS_ROLLBACK:
+      console.log('failed to fetch contacts', action)
+      return state
+
+    case ADD_CONTACT_ROLLBACK:
+      console.log('failed to add contact', action.contact.name)
+      return state
+
+    case EDIT_CONTACT_ROLLBACK:
+      console.log('failed to edit contact', action.contact.name)
+      return state
+
+    case REMOVE_CONTACT_ROLLBACK:
+      console.log('failed to remove contact', action.contact.name)
+      return state
+
+    default:
+      return state
+  }
+}
 
 const contactApp = combineReducers({
   editView,
-  contacts
+  contacts,
+  rollbacks
 })
 
 export default contactApp
