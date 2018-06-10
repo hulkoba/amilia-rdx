@@ -2,6 +2,7 @@
 // It has 4 APIs to get contact list, post new contact, edit a contact and remove a contact.
 
 const express = require('express')
+const cors = require('cors')
 const bodyParser = require('body-parser')
 
 const { getContacts, addToFile, updateFile, removeFromFile } = require('./utils/utils')
@@ -10,13 +11,7 @@ const { getContacts, addToFile, updateFile, removeFromFile } = require('./utils/
 const app = express()
 
 app.use(bodyParser.json())
-
-app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*')
-  res.header('Access-Control-Allow-Headers', 'content-type')
-  res.header('Access-Control-Allow-Methods', '*')
-  next()
-})
+app.use(cors())
 
 app.get('/', function (req, res) {
   res.send('Welcome to my contacts API')
