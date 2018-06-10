@@ -46,6 +46,8 @@ app.post('/contacts', function (req, res) {
   if (!contact) {
     res.status(400).send({ msg: 'contact malformed.' })
   }
+  console.log('### add contact ', contact)
+
   // set id here?
   contact.id = new Date().toISOString()
   contact.type = 'contact'
@@ -79,11 +81,15 @@ app.put('/contacts/:id', function (req, res) {
 // delete a contact
 app.delete('/contacts/:contact_id', function (req, res) {
   const id = req.params.contact_id
+  console.log('### delete contact ', id)
+
   // const index = contacts.findIndex(item => item.id === id)
   // contacts.splice(index, 1)
 
   // return all the items not matching the action.id
   contacts = contacts.filter(c => c.id !== id)
+  console.log('### new contact after delete', contacts)
+
   res.json(contacts).send()
   // TODO: decide where to handle the reload
   // res.sendStatus(200)

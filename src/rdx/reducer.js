@@ -58,7 +58,7 @@ function contacts (state = [], action) {
   switch (action.type) {
     case FETCH_CONTACTS:
       console.log('started to fetch contacts')
-
+      // TODO update UI
       return state
 
     case FETCH_CONTACTS_COMMIT:
@@ -66,6 +66,7 @@ function contacts (state = [], action) {
 
     case ADD_CONTACT:
       console.log('started to add contact ', action.contact.name)
+      // TODO update UI
 
       return state
 
@@ -74,6 +75,7 @@ function contacts (state = [], action) {
 
     case EDIT_CONTACT:
       console.log('started to edit contact', action.contact.name)
+      // TODO update UI
 
       return state
 
@@ -88,6 +90,7 @@ function contacts (state = [], action) {
 
     case REMOVE_CONTACT:
       console.log('started to remove contact', action.contact.name)
+      // TODO update UI
 
       return state
       // return all the items not matching the action.id
