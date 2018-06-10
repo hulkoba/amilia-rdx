@@ -91,13 +91,15 @@ function contacts (state = [], action) {
     case REMOVE_CONTACT:
       console.log('started to remove contact', action.contact.name)
       // TODO update UI
-
       return state
-      // return all the items not matching the action.id
-      // return state.filter(c => c.id !== action.contact.id)
+
     case REMOVE_CONTACT_COMMIT:
       // server returns list of contacts without the deleted one
-      return Object.assign([], state, action.payload)
+      // return all the items not matching the action.id
+      console.log('### action.payload', action.payload)
+      console.log('### state', state)
+      return state.filter(c => c.id !== action.payload.id)
+      // return Object.assign([], action.payload, state)
 
     default:
       return state
@@ -120,7 +122,7 @@ function rollbacks (state = [], action) {
       return state
 
     case REMOVE_CONTACT_ROLLBACK:
-      console.log('failed to remove contact', action.contact.name)
+      console.log('failed to remove contact', action.meta.contact.name)
       return state
 
     default:

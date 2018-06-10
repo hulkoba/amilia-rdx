@@ -3,40 +3,29 @@
 
 const express = require('express')
 const bodyParser = require('body-parser')
-// const path = require('path')
+
+const { getContacts, addToFile, updateFile, removeFromFile } = require('./utils/utils')
 
 // Initialize http server
 const app = express()
 
-// TODO need to configure the path
-// app.use(express.static(path.join(__dirname, 'client', 'public')))
 app.use(bodyParser.json())
 
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+  res.header('Access-Control-Allow-Headers', 'content-type')
+  res.header('Access-Control-Allow-Methods', '*')
   next()
 })
-
-let contacts = [{
-  name: 'Amilia Pond',
-  id: 11,
-  email: 'amilia@pond.com',
-  phone: '34567899876'
-}, {
-  name: 'Doctor Who',
-  id: 22,
-  email: 'doctor@who.com',
-  phone: '34567899876'
-}]
 
 app.get('/', function (req, res) {
   res.send('Welcome to my contacts API')
 })
 
 // get all contacts
-app.get('/contacts', function (req, res) {
-  console.log('### read contacts', contacts)
+app.get('/contacts', async function (req, res) {
+  console.log('### read contacts ')
+  const contacts = await getContacts()
   res.send(contacts)
 })
 
@@ -52,46 +41,41 @@ app.post('/contacts', function (req, res) {
   contact.id = new Date().toISOString()
   contact.type = 'contact'
 
-  contacts.push(contact)
+  // persist contact
+  addToFile(contact)
+
   res.json(contact).send()
 })
 
 // update a contact
-app.put('/contacts/:id', function (req, res) {
-  console.log('### update contact ', req.params.id)
+app.put('/contacts/:id', async function (req, res) {
+  console.log('### update contact with id: ', req.params.id)
   let contact = req.body.contact
   if (!contact) {
     res.status(400).send({ msg: 'contact malformed.' })
   }
 
+  const contacts = await getContacts()
   // find, replace and send
   let editedContact = contacts.filter(c => (c.id === contact.id))
   editedContact = contact
 
   // update persisted contacts
-  contacts = contacts.map(c => {
-    if (c.id === contact.id) return contact
-    return c
-  })
-  console.log('### contacts', contacts)
+  updateFile(editedContact)
 
+  console.log('### updated contact ', editedContact)
   res.json(editedContact).send()
 })
 
 // delete a contact
-app.delete('/contacts/:contact_id', function (req, res) {
+app.delete('/contacts/:contact_id', async function (req, res) {
   const id = req.params.contact_id
   console.log('### delete contact ', id)
 
-  // const index = contacts.findIndex(item => item.id === id)
-  // contacts.splice(index, 1)
-
-  // return all the items not matching the action.id
-  contacts = contacts.filter(c => c.id !== id)
-  console.log('### new contact after delete', contacts)
-
-  res.json(contacts).send()
+  removeFromFile(id)
   // TODO: decide where to handle the reload
+  res.json({id: id}).send()
+  // res.json(newContacs).send()
   // res.sendStatus(200)
 })
 
