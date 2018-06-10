@@ -21,7 +21,7 @@ class ContactList extends Component {
     return (
       state.editView.isOpen
         ? <ContactForm
-          handleCancel={toggleEdit}
+          handleCancel={toggleEdit.bind(this, null)}
           addContact={addContact}
           editContact={editContact}
           contact={state.editView.contact} />

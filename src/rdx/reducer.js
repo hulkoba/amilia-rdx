@@ -36,17 +36,14 @@ function editView (state = initialEditView, action) {
         email: '',
         phone: ''
       }
-      if (typeof action.contact !== 'undefined') {
+      if (action.contact) {
         contact = action.contact
       }
 
       return {
         ...state,
         isOpen: !state.isOpen,
-        contact,
-        toJSON: function () {
-          return { ...this, contact: '[Contact]' }
-        }
+        contact
       }
     default:
       return state
