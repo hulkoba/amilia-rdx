@@ -85,8 +85,6 @@ function contacts (state = [], action) {
         if (c.id === action.payload.id) return action.payload
         return c
       })
-      // return [...state, action.payload]
-      // return Object.assign([], state, action.payload)
 
     case REMOVE_CONTACT:
       console.log('started to remove contact', action.contact.name)
@@ -94,12 +92,8 @@ function contacts (state = [], action) {
       return state
 
     case REMOVE_CONTACT_COMMIT:
-      // server returns list of contacts without the deleted one
       // return all the items not matching the action.id
-      console.log('### action.payload', action.payload)
-      console.log('### state', state)
       return state.filter(c => c.id !== action.payload.id)
-      // return Object.assign([], action.payload, state)
 
     default:
       return state
