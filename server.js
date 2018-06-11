@@ -19,8 +19,8 @@ app.get('/', function (req, res) {
 
 // get all contacts
 app.get('/contacts', async function (req, res) {
-  console.log('### read contacts ')
   const contacts = await getContacts()
+  console.log('### read contacts ', contacts)
   res.send(contacts)
 })
 

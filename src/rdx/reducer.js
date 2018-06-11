@@ -66,33 +66,42 @@ function contacts (state = [], action) {
       console.log('failed to fetch contacts', action)
       return state
 
-    default:
-      return state
-  }
-}
-
-function addContact (state = [], action) {
-  switch (action.type) {
     case ADD_CONTACT:
       console.log('started to add contact ', action.contact.name)
-      // TODO update UI
 
-      return state
+      // update UI temporary
+      // Since each contact item must have a unique key,
+      // so create a temp Id here – the tempId will be replace by real ID from API later
+      const tmpContact = {
+        ...action.contact,
+        id: 'tmp-' + state.length,
+        isTemp: true
+      }
+
+      return [...state, tmpContact]
 
     case ADD_CONTACT_COMMIT:
-      return [...state, action.payload]
+      console.log('### action.payload', action.payload)
+      // const cleanState = state.filter(c => c.isTemp)
+      // return [...cleanState, action.payload]
+      return state.map(contact => {
+        if (contact.id.startsWith('tmp-')) {
+          return {
+            ...contact,
+            // replace the temp ID by real ID from API
+            id: action.payload.id,
+            isTemp: false
+          }
+        }
+        return contact
+      })
 
     case ADD_CONTACT_ROLLBACK:
       console.log('failed to add contact', action.meta.contact.name)
-      return state
+      // return state without temporary contacts?
+      // return state
+      return state.filter(contact => contact.id.startsWith('tmp-'))
 
-    default:
-      return state
-  }
-}
-
-function editContact (state = [], action) {
-  switch (action.type) {
     case EDIT_CONTACT:
       console.log('started to edit contact', action.contact.name)
       // TODO update UI
@@ -110,13 +119,6 @@ function editContact (state = [], action) {
       console.log('failed to edit contact', action.meta.contact.name)
       return state
 
-    default:
-      return state
-  }
-}
-
-function removeContact (state = [], action) {
-  switch (action.type) {
     case REMOVE_CONTACT:
       console.log('started to remove contact', action.contact.name)
       // TODO update UI
@@ -124,6 +126,7 @@ function removeContact (state = [], action) {
 
     case REMOVE_CONTACT_COMMIT:
       // return all the items not matching the action.id
+      console.log('### contact removed successfully', action)
       return state.filter(c => c.id !== action.payload.id)
 
     case REMOVE_CONTACT_ROLLBACK:
@@ -137,10 +140,7 @@ function removeContact (state = [], action) {
 
 const contactApp = combineReducers({
   editView,
-  contacts,
-  addContact,
-  editContact,
-  removeContact
+  contacts
 })
 
 export default contactApp

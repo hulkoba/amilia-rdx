@@ -9,7 +9,8 @@ class ContactList extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState) {
-    if ((nextProps.state.contacts === this.props.state.contacts) && (nextProps.state.editView.isOpen === this.props.state.editView.isOpen)) {
+    if ((nextProps.state.contacts === this.props.state.contacts) &&
+      (nextProps.state.editView.isOpen === this.props.state.editView.isOpen)) {
       return false
     }
     return true
@@ -17,7 +18,6 @@ class ContactList extends Component {
 
   render () {
     const { state, toggleEdit, handleOnDeleteClick, addContact, editContact } = this.props
-    // console.log('### state', state)
     return (
       state.editView.isOpen
         ? <ContactForm
@@ -29,7 +29,7 @@ class ContactList extends Component {
         : <ul className='contact-list'>
           {state.contacts.map(contact => (
             <li className='contact-list-li' key={contact.id}>
-              <span>{contact.name}</span>
+              <span className={`${contact.isTemp ? 'yellow' : ''}`}>{contact.name}</span>
               <div className='action-btns'>
                 <button onClick={toggleEdit.bind(this, contact)}>edit</button>
                 <button onClick={handleOnDeleteClick.bind(this, contact)}>delete</button>
