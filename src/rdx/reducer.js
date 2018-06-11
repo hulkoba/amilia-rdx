@@ -18,6 +18,9 @@ import {
 
 // The reducer is a pure function that takes the previous state and an action, and returns the next state.
 
+const isTemp = id => {
+  return id.startsWith('tmp')
+}
 const initialEditView = {
   isOpen: false,
   contact: {
@@ -54,67 +57,113 @@ function editView (state = initialEditView, action) {
 function contacts (state = [], action) {
   switch (action.type) {
     case FETCH_CONTACTS:
-      console.log('started to fetch contacts')
-      // TODO update UI
+      console.log('started to fetch contacts ')
       return state
 
     case FETCH_CONTACTS_COMMIT:
+      console.log('### state', state)
+      console.log('### action', action)
       return Object.assign([], state, action.payload)
 
-    case ADD_CONTACT:
-      console.log('started to add contact ', action.contact.name)
-      // TODO update UI
-
-      return state
-
-    case ADD_CONTACT_COMMIT:
-      return [...state, action.payload]
-
-    case EDIT_CONTACT:
-      console.log('started to edit contact', action.contact.name)
-      // TODO update UI
-
-      return state
-
-    case EDIT_CONTACT_COMMIT:
-      // find and replace contact
-      return state.map(c => {
-        if (c.id === action.payload.id) return action.payload
-        return c
-      })
-
-    case REMOVE_CONTACT:
-      console.log('started to remove contact', action.contact.name)
-      // TODO update UI
-      return state
-
-    case REMOVE_CONTACT_COMMIT:
-      // return all the items not matching the action.id
-      return state.filter(c => c.id !== action.payload.id)
-
-    default:
-      return state
-  }
-}
-
-// TODO need to handle failures ?
-function rollbacks (state = [], action) {
-  switch (action.type) {
     case FETCH_CONTACTS_ROLLBACK:
       console.log('failed to fetch contacts', action)
       return state
 
+    case ADD_CONTACT:
+      console.log('started to add contact ', action.contact.name)
+
+      // update UI temporary
+      // Since each contact item must have a unique key,
+      // so create a temp Id here – the tempId will be replace by real ID from API later
+      const tmpContact = {
+        ...action.contact,
+        id: 'tmp-' + state.length,
+        isTemp: true
+      }
+      return [...state, tmpContact]
+
+    case ADD_CONTACT_COMMIT:
+      console.log('successfully added contact ', action.payload.name)
+
+      return state.map(contact => {
+        if (isTemp(contact.id)) {
+          return {
+            ...contact,
+            // replace the temp ID by real ID from API
+            id: action.payload.id,
+            isTemp: false
+          }
+        }
+        return contact
+      })
+
     case ADD_CONTACT_ROLLBACK:
-      console.log('failed to add contact', action.contact.name)
-      return state
+      console.log('failed to add contact', action.meta.contact.name)
+      // return state without temporary contacts?
+      return state.filter(contact => contact.id.startsWith('tmp-'))
+
+    case EDIT_CONTACT:
+      console.log('started to edit contact', action.contact.name)
+
+      return state.map(contact => {
+        if (contact.id === action.contact.id) {
+          // replace real id with temp ID, so we know this is not in sync
+          return {
+            ...action.contact,
+            id: 'tmp-' + action.contact.id,
+            isTemp: true
+          }
+        }
+        return contact
+      })
+
+    case EDIT_CONTACT_COMMIT:
+      return state.map(contact => {
+        // replace the temp ID by real ID from API
+        if (isTemp(contact.id) && contact.id.substring(4) === action.payload.id) {
+          return {
+            isTemp: false,
+            ...action.payload
+          }
+        }
+        return contact
+      })
 
     case EDIT_CONTACT_ROLLBACK:
-      console.log('failed to edit contact', action.contact.name)
-      return state
+      console.log('failed to edit contact', action.meta.contact.name)
+      return state.filter(contact => contact.id.startsWith('tmp-'))
+
+    case REMOVE_CONTACT:
+      console.log('started to remove contact', action.contact.name)
+
+      // set isDeleting flag?
+      // return state.map(contact => {
+      //   if (contact.id === action.contact.id) {
+      //     return {
+      //       ...contact,
+      //       isDeleting: true
+      //     }
+      //   } else {
+      //     return contact
+      //   }
+      // })
+      // or remove from local state?
+      return state.filter(contact => contact.id !== action.contact.id)
+
+    case REMOVE_CONTACT_COMMIT:
+      // return all the items not matching the action.id
+      console.log('### contact removed successfully', action)
+      return state.filter(contact => contact.id !== action.payload.id)
 
     case REMOVE_CONTACT_ROLLBACK:
       console.log('failed to remove contact', action.meta.contact.name)
-      return state
+      // revert deleting
+      return state.map(contact => {
+        if (contact.id === action.meta.contact.id) {
+          delete contact.isDeleting
+        }
+        return contact
+      })
 
     default:
       return state
@@ -123,8 +172,7 @@ function rollbacks (state = [], action) {
 
 const contactApp = combineReducers({
   editView,
-  contacts,
-  rollbacks
+  contacts
 })
 
 export default contactApp

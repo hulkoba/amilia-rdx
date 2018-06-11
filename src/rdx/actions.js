@@ -10,6 +10,7 @@ export const FETCH_CONTACTS_ROLLBACK = 'FETCH_CONTACTS_ROLLBACK'
 export const EDIT_CONTACT = 'EDIT_CONTACT'
 export const EDIT_CONTACT_COMMIT = 'EDIT_CONTACT_COMMIT'
 export const EDIT_CONTACT_ROLLBACK = 'EDIT_CONTACT_ROLLBACK'
+export const REMOVE_TMP_CONTACT = 'REMOVE_TMP_CONTACT'
 export const REMOVE_CONTACT = 'REMOVE_CONTACT'
 export const REMOVE_CONTACT_COMMIT = 'REMOVE_CONTACT_COMMIT'
 export const REMOVE_CONTACT_ROLLBACK = 'REMOVE_CONTACT_ROLLBACK'
@@ -21,7 +22,7 @@ export const TOGGLE_EDIT = 'TOGGLE_EDIT'
 
 // toggles edit- / listview and passes contact
 export function toggleEdit (contact) {
-  // if (typeof contact === 'undefined') return {type: TOGGLE_EDIT}
+  if (!contact) return { type: TOGGLE_EDIT }
   return {
     type: TOGGLE_EDIT,
     contact
@@ -32,8 +33,10 @@ const API = 'http://127.0.0.1:1312'
 
 /* Decorate actions with offline metadata
     effect: the network action to execute
-    commit: action to dispatch when effect  has been successfully sent
-    rollback: action to dispatch if network action fails permanently (does not count network-related failures, which will be automatically retried):
+    commit: action to dispatch when effect has been successfully sent
+    rollback: action to dispatch if network action fails permanently (does not count network-related failures, which will be automatically retried)
+      - is dispatched when API is failed. It means the API returns status code 500 or server doesn’t work.
+      - When network is too slow or not stable, redux-offline will try to call API few times before dispatch ..._ROLLBACK.
 */
 export function addContact (contact) {
   return {
@@ -76,6 +79,7 @@ export function editContact (contact) {
 }
 
 export function removeContact (contact) {
+  if (contact.id.startsWith('tmp-')) return { type: REMOVE_TMP_CONTACT, contact }
   return {
     type: REMOVE_CONTACT,
     contact,
