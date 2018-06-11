@@ -10,6 +10,7 @@ export const FETCH_CONTACTS_ROLLBACK = 'FETCH_CONTACTS_ROLLBACK'
 export const EDIT_CONTACT = 'EDIT_CONTACT'
 export const EDIT_CONTACT_COMMIT = 'EDIT_CONTACT_COMMIT'
 export const EDIT_CONTACT_ROLLBACK = 'EDIT_CONTACT_ROLLBACK'
+export const REMOVE_TMP_CONTACT = 'REMOVE_TMP_CONTACT'
 export const REMOVE_CONTACT = 'REMOVE_CONTACT'
 export const REMOVE_CONTACT_COMMIT = 'REMOVE_CONTACT_COMMIT'
 export const REMOVE_CONTACT_ROLLBACK = 'REMOVE_CONTACT_ROLLBACK'
@@ -78,6 +79,7 @@ export function editContact (contact) {
 }
 
 export function removeContact (contact) {
+  if (contact.id.startsWith('tmp-')) return { type: REMOVE_TMP_CONTACT, contact }
   return {
     type: REMOVE_CONTACT,
     contact,

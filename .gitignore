@@ -1,5 +1,4 @@
 .vscode/
 npm-debug.log*
 build
-
 utils/contacts.json
