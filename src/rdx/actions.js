@@ -21,7 +21,7 @@ export const TOGGLE_EDIT = 'TOGGLE_EDIT'
 
 // toggles edit- / listview and passes contact
 export function toggleEdit (contact) {
-  // if (typeof contact === 'undefined') return {type: TOGGLE_EDIT}
+  if (!contact) return { type: TOGGLE_EDIT }
   return {
     type: TOGGLE_EDIT,
     contact
@@ -32,7 +32,7 @@ const API = 'http://127.0.0.1:1312'
 
 /* Decorate actions with offline metadata
     effect: the network action to execute
-    commit: action to dispatch when effect  has been successfully sent
+    commit: action to dispatch when effect has been successfully sent
     rollback: action to dispatch if network action fails permanently (does not count network-related failures, which will be automatically retried):
 */
 export function addContact (contact) {
