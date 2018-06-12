@@ -79,7 +79,6 @@ export function editContact (contact) {
 }
 
 export function removeContact (contact) {
-  if (contact.id.startsWith('tmp-')) return { type: REMOVE_TMP_CONTACT, contact }
   return {
     type: REMOVE_CONTACT,
     contact,
