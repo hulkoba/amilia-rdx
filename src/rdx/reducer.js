@@ -1,3 +1,7 @@
+/* 
+  The reducer is a pure function that takes the previous state and an action, and returns the next state.
+*/
+
 import { combineReducers } from 'redux'
 
 import {
@@ -16,7 +20,6 @@ import {
   TOGGLE_EDIT
 } from './actions'
 
-// The reducer is a pure function that takes the previous state and an action, and returns the next state.
 
 const isTemp = id => {
   return id.startsWith('tmp')
@@ -61,9 +64,13 @@ function contacts (state = [], action) {
       return state
 
     case FETCH_CONTACTS_COMMIT:
-      console.log('### state', state)
-      console.log('### action', action)
-      return Object.assign([], state, action.payload)
+      console.log('successfully fetched contacts ')
+
+      // for collaborativ work:
+      // need to check if local state and Api is in sync
+      // remove data from local if it doesnt exist in backend
+      return action.payload
+      // return Object.assign([], state, action.payload)
 
     case FETCH_CONTACTS_ROLLBACK:
       console.log('failed to fetch contacts', action)
@@ -136,18 +143,18 @@ function contacts (state = [], action) {
     case REMOVE_CONTACT:
       console.log('started to remove contact', action.contact.name)
 
-      // set isDeleting flag?
-      // return state.map(contact => {
-      //   if (contact.id === action.contact.id) {
-      //     return {
-      //       ...contact,
-      //       isDeleting: true
-      //     }
-      //   } else {
-      //     return contact
-      //   }
-      // })
-      // or remove from local state?
+      // set isDeleting flag
+      state.map(contact => {
+        if (contact.id === action.contact.id) {
+          return {
+            ...contact,
+            isDeleting: true
+          }
+        } else {
+          return contact
+        }
+      })
+      // and remove from local state?
       return state.filter(contact => contact.id !== action.contact.id)
 
     case REMOVE_CONTACT_COMMIT:
