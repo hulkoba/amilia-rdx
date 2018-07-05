@@ -25,21 +25,24 @@ app.get('/contacts', async function (req, res) {
 })
 
 // create contact and send back all contacts after creation
-app.post('/contacts', function (req, res) {
+app.post('/contacts', async function (req, res) {
   let contact = req.body.contact
-  if (!contact) {
+  console.log('### req.body', req.body)
+  if (!contact || typeof contact === 'undefined') {
     res.status(400).send({ msg: 'contact malformed.' })
+  } else {
+    console.log('### add contact ', contact)
+
+    // set id here?
+    contact._id = new Date().toISOString()
+    contact.id = new Date().toISOString() // lazy
+    // contact.type = 'contact'
+
+    // persist contact
+    await addToFile(contact)
+
+    res.json(contact).send()
   }
-  console.log('### add contact ', contact)
-
-  // set id here?
-  contact.id = new Date().toISOString()
-  contact.type = 'contact'
-
-  // persist contact
-  addToFile(contact)
-
-  res.json(contact).send()
 })
 
 // update a contact

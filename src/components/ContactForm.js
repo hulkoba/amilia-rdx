@@ -31,7 +31,7 @@ class ContactForm extends Component {
 
   handleSubmit (event) {
     event.preventDefault()
-    if (this.state.contact.id) {
+    if (this.state.contact._id) {
       this.props.editContact(this.state.contact)
     } else {
       this.props.addContact(this.state.contact)

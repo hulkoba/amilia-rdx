@@ -2,3 +2,4 @@
 npm-debug.log*
 build
 utils/contacts.json
+package-lock.json

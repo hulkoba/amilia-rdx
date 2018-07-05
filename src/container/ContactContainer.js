@@ -7,7 +7,7 @@ import {
   removeContact,
   toggleEdit } from '../rdx/actions'
 
-import ContactList from '../components/ContactList'
+import Contacts from '../components/Contacts'
 
 const mapStateToProps = state => ({
   state
@@ -21,4 +21,4 @@ const mapDispatchToProps = dispatch => ({
   handleOnDeleteClick: contact => dispatch(removeContact(contact))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(ContactList)
+export default connect(mapStateToProps, mapDispatchToProps)(Contacts)

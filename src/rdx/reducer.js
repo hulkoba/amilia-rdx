@@ -1,4 +1,4 @@
-/* 
+/*
   The reducer is a pure function that takes the previous state and an action, and returns the next state.
 */
 
@@ -19,7 +19,6 @@ import {
   REMOVE_CONTACT_ROLLBACK,
   TOGGLE_EDIT
 } from './actions'
-
 
 const isTemp = id => {
   return id.startsWith('tmp')
@@ -69,6 +68,7 @@ function contacts (state = [], action) {
       // for collaborativ work:
       // need to check if local state and Api is in sync
       // remove data from local if it doesnt exist in backend
+      if (state === action.payload) return state
       return action.payload
       // return Object.assign([], state, action.payload)
 
@@ -85,18 +85,19 @@ function contacts (state = [], action) {
       const tmpContact = {
         ...action.contact,
         id: 'tmp-' + state.length,
+        _id: new Date().toISOString(),
         isTemp: true
       }
       return [...state, tmpContact]
 
     case ADD_CONTACT_COMMIT:
       console.log('successfully added contact ', action.payload.name)
-
+      // TODO: contact === action.payload?
       return state.map(contact => {
         if (isTemp(contact.id)) {
           return {
             ...contact,
-            // replace the temp ID by real ID from API
+            // replace the temp ID by real ID from API, so we know this is not in sync
             id: action.payload.id,
             isTemp: false
           }
@@ -125,6 +126,7 @@ function contacts (state = [], action) {
       })
 
     case EDIT_CONTACT_COMMIT:
+      // TODO: contact === action.payload?
       return state.map(contact => {
         // replace the temp ID by real ID from API
         if (isTemp(contact.id) && contact.id.substring(4) === action.payload.id) {
@@ -158,6 +160,7 @@ function contacts (state = [], action) {
       return state.filter(contact => contact.id !== action.contact.id)
 
     case REMOVE_CONTACT_COMMIT:
+      // TODO: contact === action.payload?
       // return all the items not matching the action.id
       console.log('### contact removed successfully', action)
       return state.filter(contact => contact.id !== action.payload.id)

@@ -34,9 +34,12 @@ const API = 'http://127.0.0.1:1312'
 /* Decorate actions with offline metadata
     effect: the network action to execute
     commit: action to dispatch when effect has been successfully sent
-    rollback: action to dispatch if network action fails permanently (does not count network-related failures, which will be automatically retried)
-      - is dispatched when API is failed. It means the API returns status code 500 or server doesn’t work.
-      - When network is too slow or not stable, redux-offline will try to call API few times before dispatch ..._ROLLBACK.
+    rollback: action to dispatch if network action fails permanently
+    (does not count network-related failures, which will be automatically retried)
+      - is dispatched when API is failed.
+      It means the API returns status code 500 or server doesn’t work.
+      - When network is too slow or not stable,
+      redux-offline will try to call API few times before dispatch ..._ROLLBACK.
 */
 export function addContact (contact) {
   return {
@@ -44,7 +47,7 @@ export function addContact (contact) {
     contact,
     meta: {
       offline: {
-        effect: { url: `${API}/contacts`, method: 'POST', body: JSON.stringify({ contact }) },
+        effect: { url: `${API}/contacts`, method: 'POST', body: JSON.stringify({contact}) },
         commit: { type: 'ADD_CONTACT_COMMIT', meta: { contact } },
         rollback: { type: 'ADD_CONTACT_ROLLBACK', meta: { contact } }
       }
