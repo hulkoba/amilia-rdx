@@ -53,7 +53,7 @@ app.put('/contacts/:id', async function (req, res) {
     editedContact = contact
 
     // update persisted contacts
-    updateFile(editedContact)
+    await updateFile(editedContact)
 
     console.log('### updated contact ', editedContact)
     res.json(editedContact).send()
@@ -67,7 +67,7 @@ app.delete('/contacts/:contact_id', async function (req, res) {
   if (!id) {
     res.status(400).send({ msg: 'contact malformed.' })
   } else {
-    removeFromFile(id)
+    await removeFromFile(id)
     // TODO: decide where to handle the reload
     res.json({id: id}).send()
     // res.json(newContacs).send()
