@@ -18,7 +18,7 @@ const mapDispatchToProps = dispatch => ({
   readContacts: () => dispatch(readContacts()),
   addContact: contact => dispatch(addContact(contact)),
   editContact: contact => dispatch(editContact(contact)),
-  handleOnDeleteClick: contact => dispatch(removeContact(contact))
+  deleteContact: contact => dispatch(removeContact(contact))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Contacts)

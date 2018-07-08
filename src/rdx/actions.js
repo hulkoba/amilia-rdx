@@ -47,7 +47,7 @@ export function addContact (contact) {
     contact,
     meta: {
       offline: {
-        effect: { url: `${API}/contacts`, method: 'POST', body: JSON.stringify({contact}) },
+        effect: { url: `${API}/contacts`, method: 'POST', body: JSON.stringify(contact) },
         commit: { type: 'ADD_CONTACT_COMMIT', meta: { contact } },
         rollback: { type: 'ADD_CONTACT_ROLLBACK', meta: { contact } }
       }

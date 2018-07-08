@@ -5,7 +5,7 @@ import '../main.css'
 const ContactList = ({contacts, handleOnEditClick, handleOnDeleteClick}) => (
   <ul className='contact-list'>
     {contacts.map(contact => (
-      <li className='contact-list-li' key={contact._id}>
+      <li className='contact-list-li' key={contact.id}>
         <span className={`${contact.isTemp ? 'yellow' : ''}`}>{contact.name}</span>
         <div className='action-btns'>
           <button onClick={handleOnEditClick.bind(this, contact)}>edit</button>

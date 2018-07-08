@@ -1,35 +1,8 @@
 [
   {
     "name": "Amilia Pond",
-    "_id": "11",
+    "id": "11",
     "email": "amilia@pond.com",
     "phone": "34567899876"
-  },
-  {
-    "name": "Doctor Who",
-    "_id": "22",
-    "email": "doctor@who.com",
-    "phone": "34567899876"
-  },
-  {
-    "name": "temp",
-    "email": "jio",
-    "phone": "",
-    "_id": "2018-06-11T15:58:09.732Z",
-    "type": "contact"
-  },
-  {
-    "name": "sadsfdsd",
-    "email": "",
-    "phone": "",
-    "_id": "2018-06-30T14:13:41.703Z",
-    "id": "2018-06-30T14:13:41.703Z"
-  },
-  {
-    "name": "add offline",
-    "email": "",
-    "phone": "",
-    "_id": "2018-06-30T14:18:27.588Z",
-    "id": "2018-06-30T14:18:27.588Z"
   }
 ]

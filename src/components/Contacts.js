@@ -17,7 +17,7 @@ class Contacts extends Component {
   }
 
   render () {
-    const { state, toggleEdit, addContact, editContact } = this.props
+    const { state, toggleEdit, addContact, editContact, deleteContact } = this.props
     return (
       state.editView.isOpen
         ? <ContactForm
@@ -28,8 +28,8 @@ class Contacts extends Component {
 
         : <ContactList
           contacts={state.contacts}
-          handleOnEditClick={this.toggleEdit}
-          handleOnDeleteClick={this.deleteContact} />
+          handleOnEditClick={toggleEdit}
+          handleOnDeleteClick={deleteContact} />
     )
   }
 }

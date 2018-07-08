@@ -1,7 +1,7 @@
 import React from 'react'
 
 import Header from './container/Header'
-import Contacts from './container/Contacts'
+import Contacts from './container/ContactsContainer'
 
 const App = () => (
   <div>
