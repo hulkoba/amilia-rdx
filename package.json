@@ -7,7 +7,6 @@
     "@redux-offline/redux-offline": "^2.3.3",
     "cors": "^2.8.4",
     "express": "^4.16.3",
-    "path": "^0.12.7",
     "react": "^16.4.0",
     "react-detect-offline": "^2.1.1",
     "react-dom": "^16.4.0",
