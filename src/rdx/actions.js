@@ -73,7 +73,7 @@ export function editContact (contact) {
     contact,
     meta: {
       offline: {
-        effect: { url: `${API}/contacts/${contact.id}`, method: 'PUT', body: JSON.stringify({ contact }) },
+        effect: { url: `${API}/contacts/${contact.id}`, method: 'PUT', body: JSON.stringify(contact) },
         commit: { type: 'EDIT_CONTACT_COMMIT', meta: { contact } },
         rollback: { type: 'EDIT_CONTACT_ROLLBACK', meta: { contact } }
       }

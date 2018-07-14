@@ -34,7 +34,11 @@ class ContactForm extends Component {
     if (this.state.contact.id) {
       this.props.editContact(this.state.contact)
     } else {
-      this.props.addContact(this.state.contact)
+      const newContact = {
+        ...this.state.contact,
+        id: new Date().toISOString()
+      }
+      this.props.addContact(newContact)
     }
     // go to listView
     this.props.handleCancel()

@@ -11,7 +11,14 @@ const { getContacts, addToFile, updateFile, removeFromFile } = require('./utils/
 const app = express()
 
 app.use(bodyParser.json())
+// Enable CORS
 app.use(cors())
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Methods', '*')
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+  next()
+})
 
 app.get('/', function (req, res) {
   res.send('Welcome to my contacts API')
@@ -26,13 +33,13 @@ app.get('/contacts', async function (req, res) {
 
 // create contact and send back all contacts after creation
 app.post('/contacts', async function (req, res) {
-  let contact = req.body.contact
+  let contact = req.body
 
   if (!contact || typeof contact === 'undefined') {
     res.status(400).send({ msg: 'contact malformed.' })
   } else {
     console.log('### add contact ', contact)
-    contact.id = new Date().toISOString()
+    // contact.id = new Date().toISOString()
     // persist contact
     await addToFile(contact)
 

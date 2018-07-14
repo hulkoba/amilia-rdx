@@ -20,8 +20,9 @@ import {
   TOGGLE_EDIT
 } from './actions'
 
-const isTemp = (id, payload) => {
-  return id.startsWith('tmp') && id.substring(4) === payload.id
+const isTemp = (contact, payloadID) => {
+  // return id.startsWith('tmp') && id.substring(4) === payloadID
+  return contact.isTemp === true && contact.id === payloadID
 }
 const initialEditView = {
   isOpen: false,
@@ -76,27 +77,25 @@ function contacts (state = [], action) {
       return state
 
     case ADD_CONTACT:
-      console.log('started to add contact ', action.contact.name)
+      console.log('started to add contact ', action)
 
       // update UI temporary
       // Since each contact item must have a unique key,
       // so create a temp Id here – the tempId will be replace by real ID from API later
       const tmpContact = {
         ...action.contact,
-        id: new Date().toISOString(),
         isTemp: true
       }
       return [...state, tmpContact]
 
     case ADD_CONTACT_COMMIT:
-      console.log('successfully added contact ', action.payload.name)
+      console.log('successfully added contact ', action)
+
       // TODO: contact === action.payload?
       return state.map(contact => {
-        if (isTemp(contact.id, action.payload.contact)) {
+        if (isTemp(contact, action.payload.id)) {
           return {
             ...contact,
-            // replace the temp ID by real ID from API, so we know this is not in sync
-            id: action.payload.id,
             isTemp: false
           }
         }
@@ -104,19 +103,18 @@ function contacts (state = [], action) {
       })
 
     case ADD_CONTACT_ROLLBACK:
-      console.log('failed to add contact', action.meta.contact.name)
+      console.log('failed to add contact', action)
       // return state without temporary contact?
-      return state.filter(contact => isTemp(contact.id, action.meta.contact))
+      return state.filter(contact => isTemp(contact, action.meta.contact.id))
 
     case EDIT_CONTACT:
-      console.log('started to edit contact', action.contact.name)
+      console.log('started to edit contact', action)
 
       return state.map(contact => {
         if (contact.id === action.contact.id) {
           // replace real id with temp ID, so we know this is not in sync
           return {
             ...action.contact,
-            id: 'tmp-' + action.contact.id,
             isTemp: true
           }
         }
@@ -125,11 +123,11 @@ function contacts (state = [], action) {
 
     case EDIT_CONTACT_COMMIT:
       // TODO: contact === action.payload?
+      console.log('### successfully edited contact', action)
       return state.map(contact => {
-        // replace the temp ID by real ID from API
-        if (isTemp(contact.id, action.payload.contact)) {
+        if (isTemp(contact, action.payload.id)) {
           return {
-            ...action.payload.contact,
+            ...action.payload,
             isTemp: false
           }
         }
@@ -137,11 +135,11 @@ function contacts (state = [], action) {
       })
 
     case EDIT_CONTACT_ROLLBACK:
-      console.log('failed to edit contact', action.meta.contact.name)
-      return state.filter(contact => isTemp(contact.id, action.meta.contact))
+      console.log('failed to edit contact', action)
+      return state.filter(contact => isTemp(contact, action.meta.contact.id))
 
     case REMOVE_CONTACT:
-      console.log('started to remove contact', action.contact.name)
+      console.log('started to remove contact', action)
 
       // set isDeleting flag
       state.map(contact => {
@@ -161,7 +159,7 @@ function contacts (state = [], action) {
       // TODO: contact === action.payload?
       // return all the items not matching the action.id
       console.log('### contact removed successfully', action)
-      return state.filter(contact => contact.id !== action.payload.contact.id)
+      return state.filter(contact => contact.id !== action.payload.id)
 
     case REMOVE_CONTACT_ROLLBACK:
       console.log('failed to remove contact', action.meta.contact.name)
