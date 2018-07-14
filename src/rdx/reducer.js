@@ -17,7 +17,8 @@ import {
   REMOVE_CONTACT,
   REMOVE_CONTACT_COMMIT,
   REMOVE_CONTACT_ROLLBACK,
-  TOGGLE_EDIT
+  TOGGLE_EDIT,
+  CHOOSE_REV
 } from './actions'
 
 const isTemp = (contact, payloadID) => {
@@ -27,6 +28,22 @@ const isTemp = (contact, payloadID) => {
 const initialEditView = {
   isOpen: false,
   contact: {
+    name: '',
+    email: '',
+    phone: ''
+  }
+}
+
+// TODO: getConflictRevisions
+
+const initialModalView = {
+  hasConflict: false,
+  contactMe: {
+    name: '',
+    email: '',
+    phone: ''
+  },
+  contactYou: {
     name: '',
     email: '',
     phone: ''
@@ -51,6 +68,22 @@ function editView (state = initialEditView, action) {
         isOpen: !state.isOpen,
         contact
       }
+    default:
+      return state
+  }
+}
+
+// toggles the edit / listview and loads contact
+function modalView (state = initialModalView, action) {
+  switch (action.type) {
+    case CHOOSE_REV:
+      // TODO remove the losing revision o.O
+
+      return {
+        ...state,
+        hasConflict: false
+      }
+
     default:
       return state
   }
@@ -178,6 +211,7 @@ function contacts (state = [], action) {
 
 const contactApp = combineReducers({
   editView,
+  modalView,
   contacts
 })
 

@@ -5,6 +5,7 @@ import {
   addContact,
   editContact,
   removeContact,
+  chooseRev,
   toggleEdit } from '../rdx/actions'
 
 import Contacts from '../components/Contacts'
@@ -15,6 +16,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   toggleEdit: contact => dispatch(toggleEdit(contact)),
+  chooseRev: contact => dispatch(chooseRev(contact)),
   readContacts: () => dispatch(readContacts()),
   addContact: contact => dispatch(addContact(contact)),
   editContact: contact => dispatch(editContact(contact)),
