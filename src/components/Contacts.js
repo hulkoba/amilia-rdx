@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import ContactForm from './ContactForm'
+import FormContainer from '../container/FormContainer'
 import ContactList from './ContactList'
 import Modal from './Modal'
 
@@ -29,10 +29,10 @@ class Contacts extends Component {
         }
 
         {state.editView.isOpen
-          ? <ContactForm
-            handleCancel={toggleEdit.bind(this, null)}
+          ? <FormContainer
             addContact={addContact}
             editContact={editContact}
+            handleCancel={toggleEdit.bind(this, null)}
             contact={state.editView.contact} />
 
           : <ContactList
