@@ -13,12 +13,6 @@ const app = express()
 app.use(bodyParser.json())
 // Enable CORS
 app.use(cors())
-// app.use(function (req, res, next) {
-//   res.header('Access-Control-Allow-Origin', '*')
-//   res.header('Access-Control-Allow-Methods', '*')
-//   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-//   next()
-// })
 
 app.get('/', function (req, res) {
   res.send('Welcome to my contacts API')
@@ -39,7 +33,6 @@ app.post('/contacts', async function (req, res) {
     res.status(400).send({ msg: 'contact malformed.' })
   } else {
     console.log('### add contact ', contact)
-    // contact.id = new Date().toISOString()
     // persist contact
     await addToFile(contact)
 
@@ -75,10 +68,7 @@ app.delete('/contacts/:contact_id', async function (req, res) {
     res.status(400).send({ msg: 'contact malformed.' })
   } else {
     await removeFromFile(id)
-    // TODO: decide where to handle the reload
     res.json({id: id}).send()
-    // res.json(newContacs).send()
-    // res.sendStatus(200)
   }
 })
 

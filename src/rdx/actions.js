@@ -15,7 +15,6 @@ export const REMOVE_CONTACT = 'REMOVE_CONTACT'
 export const REMOVE_CONTACT_COMMIT = 'REMOVE_CONTACT_COMMIT'
 export const REMOVE_CONTACT_ROLLBACK = 'REMOVE_CONTACT_ROLLBACK'
 export const TOGGLE_EDIT = 'TOGGLE_EDIT'
-export const CHOOSE_REV = 'CHOOSE_REV'
 
 /*
  * action creators
@@ -31,13 +30,6 @@ export function toggleEdit (contact) {
 }
 
 const API = 'http://127.0.0.1:1312'
-
-export function chooseRev (contact) {
-  return {
-    type: CHOOSE_REV,
-    contact
-  }
-}
 
 /* Decorate actions with offline metadata
     effect: the network action to execute
